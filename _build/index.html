@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=10" />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>::: Banco BHD León :::</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="css/vendor.min.css">
+	<link rel="stylesheet" href="css/main.min.css">
+
+</head>
+<body>
+<div id="contenedor"> 
+  <!--HEADER-->
+  <div id="top">
+    <div class="logo"> <img src="img/logotop.png"/></div>
+    <div class="top_links" ng-controller="indexController as index">
+      <ul>
+        <li class="desc"> <a href="#" title="Settings"> <span class="label">Logout</span> </a> </li>
+        <li class="mail"> <a href="#" title="Inbox"> <span class="label lasCount">Inbox</span> <span class="emailcontador">3</span> </a> </li>
+        <li class="usuario"><a href="#" title="User"> <span class="label" ng-bind="index.name"></span> </a></li>
+      </ul>
+    </div>
+  </div>
+<!--Inicio Area bodycontenedor-->
+  <div id="bodycontenedor"> 
+    <!--Inicio Area bodyfull-->
+    <div id="bodyfull"> 
+	<!--CONTENIDO-->
+	<div ui-view></div>
+	<!--FIN CONTENIDO-->
+	<!--FOOTER-->
+	<div id="footer">Banco BHD León, Todos los Derechos Reservados 2017</div>
+    </div>
+  </div>
+	<!--FIN FOOTER-->
+	<script src="js/vendor.min.js"></script>
+	<script src="js/app.min.js"></script>
+</body>
+</html>
