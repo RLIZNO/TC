@@ -279,8 +279,8 @@
 
 
         function validateClient()  {
-            var keyCode = event.which || event.keyCode;
-            if (keyCode === 13) {
+            /*var keyCode = event.which || event.keyCode;
+            if (keyCode === 13) {*/
 
             var documentNumber = vm.viewModelmoldedFormalization.identificationName;
             resetData();
@@ -302,7 +302,7 @@
                             }, 0);
                         }, modalError);
 
-            }
+            //}
 
         };
 

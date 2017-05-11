@@ -121,8 +121,19 @@
                         moldedFormalization.formMoldedFormalization.identificationName.$touched) && 
                         moldedFormalization.formMoldedFormalization.identificationName.$invalid}" />
                   </span>
-                </div>
+                </div> 
               <div class="columna3_2">
+                <div class="botonarearight">            
+                  <button  
+                      class="boton3 btnlager2 btnblue"
+                      ng-click="moldedFormalization.validateClient()">
+                      Validar Cédula
+                  </button>
+                </div>
+                </div>
+            </div>
+            <div class="mantenimiento">  
+              <div class="columna3_1">
                 <span class="labelAditional">Sexo</span> 
                   <span class="input">
                         <select
@@ -140,7 +151,7 @@
                            && moldedFormalization.formMoldedFormalization.sex.$error.required">Este campo es obligatorio</span> 
                   </span>
                 </div>
-              <div class="columna3_3">
+              <div class="columna3_2">
                   <span class="labelAditional">Fecha Nacimiento</span>
                    <span class="input">
                      <input type="text"
@@ -166,8 +177,7 @@
                             && moldedFormalization.formMoldedFormalization.datePassport.$error.required">Este campo es obligatorio</span>   
                   </span>
               </div>
-            </div>
-                  
+            </div>      
                   <div class="mantenimiento">  <div class="columna3_1"><span class="labelAditional">Ciudad de Nacimiento</span> <span class="input">
                   <input name="" type="text" />
                   </span></div>
