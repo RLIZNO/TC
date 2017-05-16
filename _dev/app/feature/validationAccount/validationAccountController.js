@@ -187,6 +187,7 @@
         vm.jsonDataTc = {};
         vm.clientCanContinue = false;
         vm.clientAprobado = false;
+        var jsonData = {};
         vm.viewModelvalidationAccount.basicData = {
                 email : null,
                 firstLastName : null,
@@ -878,6 +879,21 @@
                 }
 
             }, modalError);
+
+            /*var getJsonCierreForz = localStorage.getItem('JSON');
+            var docNumUserCierreForz = JSON.parse(getJsonCierreForz);
+            var t = docNumUserCierreForz.documentNumber;*/
+
+            addTableService.getcierreForzosoTC(documentNumber).then(
+                function (response) {   
+                    if(response.success == true ){
+                        $rootScope.globalUserJSon = response.data;
+                        window.location.href = "#/form";
+                    }
+                });  
+
+            
+
         }
 
         /**

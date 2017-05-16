@@ -20,7 +20,10 @@
         '$scope',
         'creditBureauService',
         'creditListService',
+        'validationCardKeyServ',
+        'printCardService',
         '$timeout',
+        'addTableService'
     ];
 
     function formalizationController(
@@ -37,7 +40,10 @@
         $scope,
         creditBureauService,
         creditListService,
-        $timeout
+        validationCardKeyServ,
+        printCardService,
+        $timeout,
+        addTableService
     ) {
         var vm = this;
         //variables
@@ -83,6 +89,7 @@
         vm.getCreditBureauNoCLient = getCreditBureauNoCLient;
         vm.getCreditListService = getCreditListService;
         vm.getvalidateClientCreditCard = getvalidateClientCreditCard;
+        vm.validateKeyCard = validateKeyCard;
         vm.namePlastic2 = "";
         vm.landLine = "";
         vm.sex = "";
@@ -95,9 +102,85 @@
         vm.validAditional = validAditional;
         vm.aggAditional = false;
         vm.validImpre = validImpre;
+        vm.positionCard="";
+        $rootScope.globalUserJSon;
+
+        jsonData = JSON.parse(localStorage.getItem("jsonDataClient"));
+
+        addTableService.getcierreForzosoTC(jsonData.numberDocument).then(
+            function(response){
+                $rootScope.globalUserJSon = response.data;
+            }
+        );
 
         function validImpre(){
-            window.location.href = "#/result";
+
+            validationCardKeyServ.getPositionKeyCard($rootScope.globalUserJSon.documentNumber).then(
+                function(response){
+                    vm.positionCard = response.data.positionId;
+                }
+            );
+            
+            //window.location.href = "#/result";
+            var modal = document.getElementById('myModal');
+            var span = document.getElementsByClassName("close")[0];
+            modal.style.display = "block";
+
+            span.onclick = function() {
+                modal.style.display = "none";
+                vm.submitted = false;
+                vm.formNewInvalid =  false;
+            }
+
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                    vm.submitted = false;
+                    vm.formNewInvalid =  false;
+                }
+            }
+        }
+
+        function validateKeyCard(){
+            var jsonValKeyCard = {
+                "documentNumber":"22300845330",
+                "positionId":"40", 
+                "positionValue":"9990"
+            };
+
+            validationCardKeyServ.validationCardKey(jsonValKeyCard).then(
+                function(response){
+                    if (response.success == true) {
+                        modalFactory.success(messages.modals.success.codeCorrect);
+                        printCard();
+                    } else {
+                        modalFactory.error(messages.modals.success.codeIncorrect);
+                    }
+                }
+            );
+        }
+
+        function printCard(){
+
+            var jsonPrint = {
+              "flowStepId":"2",
+              "printer":"HP Printer",
+              "productCode":"DD",
+              "cardHolderName":"ADERSO DE LEON",
+              "documentNumber":"22300845330",
+              "additional": "N",
+              "createdBy": "usuarioConectado"
+            }
+
+            printCardService.printCard(jsonPrint).then( 
+                function(response){
+                    if (response.data.success == true) {
+                        alert("Enviado a imprimir");
+                    } else {
+
+                    }
+                }
+            );
         }
 
         /**
