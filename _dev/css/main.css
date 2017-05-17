@@ -385,6 +385,14 @@ span.label3 {
   width: 33%;
 }
 
+.columna3_2_1 {
+  float: left;
+  margin: 0px;
+  padding: 0px;
+  padding-right: 1%;
+  position: relative;
+}
+
 .columna3_3 {
   float: right;
   padding-right: 0%;
@@ -673,6 +681,18 @@ span.input, span.input2, span.input3 {
   width: 80%;
 }
 
+span.inputSelect {
+  box-sizing: border-box;
+  color: #255688;
+  float: left;
+  font-size: 9pt;
+  font-weight: normal;
+  line-height: 20pt;
+  padding: 10px 0px;
+  position: relative;
+  width: 30%;
+}
+
 span.input2 {
   float: left;
   width: 29%;
@@ -688,7 +708,6 @@ span.input input[type="text"], input[type="number"], span.input2 input[type="tex
   float: left;
   margin-left: 5px;
   padding: 5px;
-  width: 90%;
 }
 
 span.input2 input[type="text"], input[type="number"] {
