@@ -98,6 +98,8 @@
         vm.datePassport = "";
         vm.email = "";
         vm.myDate = "";
+        vm.cellphone="";
+        vm.cell
         vm.nacionalidad= document.getElementById("nacionalidad");
         vm.genderSelect = document.getElementById("gender");
         //vm.bornDay = document.getElementById("fechaNacimiento");
@@ -732,6 +734,7 @@
                     vm.datePassport = jsonData.birthDate;
                     vm.email = vm.dataClientExit.email;
                     vm.myDate = jsonData.birthDate;
+                    vm.cellphone = jsonData.cellPhone;
                     vm.bornDay.setRangeText(vm.datePassport.substring(0, 10));
 
                     /*var year = vm.datePassport.substring(6,10);
