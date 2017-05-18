@@ -236,6 +236,7 @@
         vm.yearValid = yearValid;
         vm.openDatePassport  = openDatePassport;
         vm.validFico = validFico;
+        vm.datePassport = "";
         //console.log($rootScope.globalLimitData);
         $rootScope.globalLimitData={};
 
@@ -843,6 +844,7 @@
             vm.getControlList = false;
             vm.validationClient = false;
             vm.viewModelvalidationAccount.typeIdentification = 2;
+            vm.datePassport = '';
         }
 
          resetData();
@@ -884,13 +886,13 @@
             var docNumUserCierreForz = JSON.parse(getJsonCierreForz);
             var t = docNumUserCierreForz.documentNumber;*/
 
-            addTableService.getcierreForzosoTC(documentNumber).then(
+            /*addTableService.getcierreForzosoTC(documentNumber).then(
                 function (response) {   
                     if(response.success == true ){
                         $rootScope.globalUserJSon = response.data;
                         window.location.href = "#/form";
                     }
-                });  
+                });  */
 
             
 

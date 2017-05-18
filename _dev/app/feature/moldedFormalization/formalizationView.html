@@ -111,6 +111,37 @@
         </span>
         </span> 
       </div>
+      <div class="columna755_25_2">
+        <span class="labelAditional">Nombre del cliente</span> 
+        <span class="input">
+          <input name="nameUser"
+           type="text"
+           class="mayusculas"
+           ng-class="{ 'hasError': (moldedFormalization.formMoldedFormalization.nameUser.$touched)
+           && moldedFormalization.formMoldedFormalization.nameUser.$invalid 
+           || moldedFormalization.espresion2}"
+           ng-model="moldedFormalization.nameUser"
+           ng-maxlength="50"
+           ng-change= "moldedFormalization.validAcen2();"
+           ng-required="true" />
+        <span 
+           class="alerttext" 
+           ng-if="(validationAccount.submitted || moldedFormalization.formMoldedFormalization.nameUser.$touched) &&  
+           moldedFormalization.formMoldedFormalization.nameUser.$invalid"
+           >Este campo es obligatorio
+        </span>
+        <span 
+           class="alerttext" 
+           ng-if="moldedFormalization.espresion2"
+           >Este campo no permite numeros ni acentos
+        </span>
+        <span
+           class="alerttext"
+           ng-if="moldedFormalization.formMoldedFormalization.nameUser.$error.maxlength"
+           ng-bind="::i18n.general.maxLength">
+        </span>
+        </span> 
+      </div>
       </div>
       </div>
       <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -120,7 +151,6 @@
           <span class="input">
             <input name="identificationName" type="text"  
              ng-model="moldedFormalization.viewModelmoldedFormalization.identificationName"
-             ng-keypress="moldedFormalization.validateClient($event);"
              ng-class="{ 'hasError': (moldedFormalization.submitted || 
              moldedFormalization.formMoldedFormalization.identificationName.$touched) && 
              moldedFormalization.formMoldedFormalization.identificationName.$invalid}" />
@@ -129,7 +159,7 @@
         <div class="columna3_2_1">
           <div class="botonarealeft ">            
            <button  
-              class="boton3 btnlager2 btnblue"
+              class="boton3 btnblue"
               ng-click="moldedFormalization.validateClient()">
            Validar
            </button>
@@ -173,7 +203,7 @@
       <div class="mantenimiento">
         <div class="columna3_1">
           <span class="labelAditional">Fecha Nacimiento</span>
-          <span class="input">
+          <!--<span class="input">
           <input type="text"
              id="fechaNacimiento"
              name="datePassport" 
@@ -182,7 +212,7 @@
              date-typer="true"
              ng-model="moldedFormalization.datePassport"
              is-open="moldedFormalization.popupDatePassport.opened"
-             datepicker-options="moldedFormalization.dateOptions" 
+             datepicker-options="moldedFormalization.dateOptions " 
              readonly="readonly"
              current-text="Hoy" 
              clear-text="Limpiar"
@@ -195,7 +225,30 @@
           <span class="alerttext" 
              ng-if="(moldedFormalization.submitted || moldedFormalization.formMoldedFormalization.datePassport.$touched) 
              && moldedFormalization.formMoldedFormalization.datePassport.$error.required">Este campo es obligatorio</span>   
-          </span>
+          </span>-->
+          <span class="input2">
+                     <input type="text"
+                        id="fechaNacimiento"
+                        name="datePassport" 
+                        uib-datepicker-popup="{{moldedFormalization.format}}" 
+                        date-set-hidden="true"
+                        date-typer="true"
+                        ng-model="moldedFormalization.datePassport"
+                        is-open="moldedFormalization.popupDatePassport.opened"
+                        datepicker-options="moldedFormalization.dateOptions" 
+                        readonly="readonly"
+                        current-text="Hoy" 
+                        clear-text="Limpiar"
+                        close-text="Cerrar" 
+                        data-set="{{moldedFormalization.myDate}}"
+                        ng-click="moldedFormalization.openDatePassport()" 
+                        ng-class="{ 'hasError': (moldedFormalization.submitted || moldedFormalization.formMoldedFormalization.datePassport.$touched) 
+                        && moldedFormalization.formMoldedFormalization.datePassport.$invalid }" 
+                        required />
+                     <span class="alerttext" 
+                        ng-if="(moldedFormalization.submitted || moldedFormalization.formMoldedFormalization.datePassport.$touched) 
+                        && moldedFormalization.formMoldedFormalization.datePassport.$error.required">Este campo es obligatorio</span>         
+                     </span>
         </div>
         <div class="columna3_2"><span class="labelAditional">Ciudad de Nacimiento</span> 
           <span class="input">
@@ -239,7 +292,8 @@
       <span class="alerttext" ng-if="moldedFormalization.formMoldedFormalization.landLine.$error.minlength" ng-bind="::i18n.general.errorValid10Digi"></span>
       </span>
       </div>
-      <div class="columna3_2"><span class="labelAditional">Teléfono móvil</span> <span class="input">
+      <div class="columna3_2">
+      <span class="labelAditional">Teléfono móvil</span> <span class="input">
       <input name="" type="text">
       </span>
       </div>

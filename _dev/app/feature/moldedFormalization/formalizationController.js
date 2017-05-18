@@ -90,6 +90,7 @@
         vm.getCreditListService = getCreditListService;
         vm.getvalidateClientCreditCard = getvalidateClientCreditCard;
         vm.validateKeyCard = validateKeyCard;
+        vm.nameUser="";
         vm.namePlastic2 = "";
         vm.landLine = "";
         vm.sex = "";
@@ -99,6 +100,7 @@
         vm.myDate = "";
         vm.nacionalidad= document.getElementById("nacionalidad");
         vm.genderSelect = document.getElementById("gender");
+        //vm.bornDay = document.getElementById("fechaNacimiento");
         vm.validAditional = validAditional;
         vm.aggAditional = false;
         vm.validImpre = validImpre;
@@ -507,6 +509,7 @@
                         jsonData.nationality = jsonData.nationality;
                     }
 
+                    //vm.bornDay = document.getElementById("fechaNacimiento");
                     vm.getBureau = true;
                     vm.datePassport = jsonData.birthDate;
                     vm.email = jsonData.email;
@@ -585,6 +588,7 @@
             vm.validationClient = false;
             vm.viewModelmoldedFormalization.typeIdentification = 2;
             vm.bornDay = '';
+            //vm.bornDay.value = '';
             vm.datePassport = '';
             vm.limiteMaximoRd = '';
             vm.limiteMaximoUs = '';
@@ -684,6 +688,7 @@
                             (response) {
 
                             vm.dataClientExit = response;
+                            oJson =  response;
 
                     /* Validamos si el pais de residencia es la republica dominicana */
                     if (vm.dataClientExit.nacionality !== messages.general.dominicanCountrySibel) {
@@ -693,6 +698,7 @@
                     }
                             
                     vm.namePlastic2 = vm.dataClientExit.firstName + ' ' + vm.dataClientExit.firstLastname;
+                    vm.nameUser = vm.dataClientExit.firstName + ' ' + vm.dataClientExit.secondName + ' ' + vm.dataClientExit.firstLastname + ' ' + vm.dataClientExit.secondLastname;
                     vm.landLine = parseInt(vm.dataClientExit.cellPhone);
 
                     /** Validaciones para el tipo de moneda en dolares, donde se ocultan los campos Compra cheques de gerencia */
@@ -716,12 +722,36 @@
                         }
                     });
 
-                    vm.datePassport = vm.dataClientExit.birthDate;
+                    vm.bornDay = document.getElementById("fechaNacimiento");
+                    //vm.datePassport = vm.dataClientExit.birthDate;
+                    //vm.datePassport = vm.datePassport.replace("/","-").replace("/","-");
+                    //vm.datePassport.split("").reverse("").join("");
+                    //vm.datePassport = "1989-08-05";
+                    //30/12/1986
+                    /*NUEVO*/
+                    vm.datePassport = jsonData.birthDate;
                     vm.email = vm.dataClientExit.email;
-                    vm.myDate = vm.dataClientExit.birthDate;
+                    vm.myDate = jsonData.birthDate;
                     vm.bornDay.setRangeText(vm.datePassport.substring(0, 10));
-                    console.log(vm.dataClientExit);
-                      
+
+                    /*var year = vm.datePassport.substring(6,10);
+                    var month = vm.datePassport.substring(3,5);
+                    var day = vm.datePassport.substring(0,2);
+                    var completeDate =  year  + "-" + month   + "-" + day  ;
+                    var today = new Date(completeDate);
+                    var today1 = new Date(completeDate);
+                    vm.myDate = today1;
+                    var dd = today.getDate();
+                    var mm = today.getMonth()+1; //
+                    var yyyy = today.getFullYear();
+                    today = yyyy +'-'+mm +'-'+dd; 
+                    vm.email = vm.dataClientExit.email;
+                    /*var dateTest =  new Date(completeDate);
+                    var dateTest2 = new Date(completeDate);*/
+                    //var dataTest = today;
+                    
+                    //vm.myDate = "2016-07-05";
+                    //vm.bornDay.setRangeText(dataTest.substring(0, 10));    
                     }, modalError);
                 }
 
