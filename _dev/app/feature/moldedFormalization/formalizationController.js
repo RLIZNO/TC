@@ -7,6 +7,7 @@
 
     //Inyeccion de dependencias
     formalizationController.$inject = [
+        'sweet',
         '$state',
         '$rootScope',
         'validationClientService',
@@ -14,6 +15,7 @@
         'SELECT_DEFAULT',
         'ngXml2json',
         'catalogService',
+        'URL',
         'catalogComplexService',
         'CATALOG',
         'messages',
@@ -21,12 +23,14 @@
         'creditBureauService',
         'creditListService',
         'validationCardKeyServ',
+        'validationUserService',
         'printCardService',
         '$timeout',
         'addTableService'
     ];
 
     function formalizationController(
+        sweet,
         $state,
         $rootScope,
         validationClientService,
@@ -34,6 +38,7 @@
         SELECT_DEFAULT,
         ngXml2json,
         catalogService,
+        URL,
         catalogComplexService,
         CATALOG,
         messages,
@@ -41,6 +46,7 @@
         creditBureauService,
         creditListService,
         validationCardKeyServ,
+        validationUserService,
         printCardService,
         $timeout,
         addTableService
@@ -81,10 +87,12 @@
         };
 
         /* NUEVAS FUNCIONES */
+        vm.printCard = vm.printCard;
         vm.validateClient = validateClient;
         vm.resetData = resetData;
         vm.modalError = modalError;
         vm.clientCanContinue = false;
+        vm.nameUser="";
         vm.getCreditBureau = getCreditBureau;
         vm.getCreditBureauNoCLient = getCreditBureauNoCLient;
         vm.getCreditListService = getCreditListService;
@@ -99,7 +107,6 @@
         vm.email = "";
         vm.myDate = "";
         vm.cellphone="";
-        vm.cell
         vm.nacionalidad= document.getElementById("nacionalidad");
         vm.genderSelect = document.getElementById("gender");
         //vm.bornDay = document.getElementById("fechaNacimiento");
@@ -111,11 +118,18 @@
 
         jsonData = JSON.parse(localStorage.getItem("jsonDataClient"));
 
+
+
         addTableService.getcierreForzosoTC(jsonData.numberDocument).then(
             function(response){
                 $rootScope.globalUserJSon = response.data;
             }
         );
+
+        catalogService.getCatalogBin(URL.CATALOG_BIN).then(
+        function (response) {
+            vm.productTyoe = response.data.List;
+        });
 
         function validImpre(){
 
@@ -147,18 +161,28 @@
 
         function validateKeyCard(){
             var jsonValKeyCard = {
-                "documentNumber":"22300845330",
+                "documentNumber": $rootScope.globalUserJSon.documentNumber,
                 "positionId":"40", 
-                "positionValue":"9990"
+                "positionValue": vm.viewModelmoldedFormalization.positionValueInput
             };
 
             validationCardKeyServ.validationCardKey(jsonValKeyCard).then(
                 function(response){
                     if (response.success == true) {
-                        modalFactory.success(messages.modals.success.codeCorrect);
+                            sweet.show({
+                            title: 'Exito',
+                            text: messages.modals.success.codeCorrect,
+                            type: 'success',
+                            confirmButtonText: 'Ok',
+                            closeOnConfirm: true
+                        }, function () {
+                            $timeout(function () {
+                                window.location.href = "#/result";
+                            }, 0);
+                        });
                         printCard();
                     } else {
-                        modalFactory.error(messages.modals.success.codeIncorrect);
+                        modalFactory.error(messages.modals.error.codeIncorrect);
                     }
                 }
             );
@@ -168,20 +192,20 @@
 
             var jsonPrint = {
               "flowStepId":"2",
-              "printer":"HP Printer",
+              "printer": $rootScope.globalUserJSon.printer,
               "productCode":"DD",
-              "cardHolderName":"ADERSO DE LEON",
-              "documentNumber":"22300845330",
-              "additional": "N",
-              "createdBy": "usuarioConectado"
+              "cardHolderName": $rootScope.globalUserJSon.firstName + " " +  $rootScope.globalUserJSon.firstLasname,
+              "documentNumber": $rootScope.globalUserJSon.documentNumber,
+              "additional": 'N',
+              "createdBy": vm.username
             }
 
             printCardService.printCard(jsonPrint).then( 
                 function(response){
-                    if (response.data.success == true) {
-                        alert("Enviado a imprimir");
+                    if (response.success == true) {
+                        modalFactory.success(messages.modals.success.printSuccess);
                     } else {
-
+                        modalFactory.success(messages.modals.error.printError);
                     }
                 }
             );
