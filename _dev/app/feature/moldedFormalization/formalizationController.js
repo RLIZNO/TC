@@ -26,6 +26,7 @@
         'validationUserService',
         'printCardService',
         '$timeout',
+        '$interval',
         'addTableService'
     ];
 
@@ -49,6 +50,7 @@
         validationUserService,
         printCardService,
         $timeout,
+        $interval,
         addTableService
     ) {
         var vm = this;
@@ -109,7 +111,6 @@
         vm.cellphone="";
         vm.nacionalidad= document.getElementById("nacionalidad");
         vm.genderSelect = document.getElementById("gender");
-        //vm.bornDay = document.getElementById("fechaNacimiento");
         vm.validAditional = validAditional;
         vm.aggAditional = false;
         vm.validImpre = validImpre;
@@ -117,8 +118,6 @@
         $rootScope.globalUserJSon;
 
         jsonData = JSON.parse(localStorage.getItem("jsonDataClient"));
-
-
 
         addTableService.getcierreForzosoTC(jsonData.numberDocument).then(
             function(response){
@@ -128,8 +127,16 @@
 
         catalogService.getCatalogBin(URL.CATALOG_BIN).then(
         function (response) {
-            vm.productTyoe = response.data.List;
+            vm.typeProduct = response.data.List;
         });
+
+        creditBureauService.getValidCientExisting(2 , "00100038397", vm.username).then(
+            function(response){
+                $rootScope.globalUserJSon.keyCardNumber = response.keyCardNumber;
+                vm.viewModelmoldedFormalization.keyCardNumber = response.keyCardNumber;
+            }
+        );
+
 
         function validImpre(){
 
@@ -141,10 +148,19 @@
             
             //window.location.href = "#/result";
             var modal = document.getElementById('myModal');
+            var btnClose = document.getElementById('formPrint');
+            
             var span = document.getElementsByClassName("close")[0];
+
             modal.style.display = "block";
 
             span.onclick = function() {
+                modal.style.display = "none";
+                vm.submitted = false;
+                vm.formNewInvalid =  false;
+            }
+
+            btnClose.onclick = function() {
                 modal.style.display = "none";
                 vm.submitted = false;
                 vm.formNewInvalid =  false;
@@ -168,7 +184,8 @@
 
             validationCardKeyServ.validationCardKey(jsonValKeyCard).then(
                 function(response){
-                    if (response.success == true) {
+                    var count = 0;
+                    if (response.success == true && count < 3) {
                             sweet.show({
                             title: 'Exito',
                             text: messages.modals.success.codeCorrect,
@@ -179,37 +196,77 @@
                             $timeout(function () {
                                 window.location.href = "#/result";
                             }, 0);
-                        });
-                        printCard();
+                        });     
+                        printCard();                           
+                        count = 0;
                     } else {
                         modalFactory.error(messages.modals.error.codeIncorrect);
+                        count++;
                     }
                 }
             );
         }
 
+
         function printCard(){
+
+            vm.printCardValid =  false;
 
             var jsonPrint = {
               "flowStepId":"2",
               "printer": $rootScope.globalUserJSon.printer,
-              "productCode":"DD",
+              "productCode": vm.viewModelmoldedFormalization.typeProduct,
               "cardHolderName": $rootScope.globalUserJSon.firstName + " " +  $rootScope.globalUserJSon.firstLasname,
               "documentNumber": $rootScope.globalUserJSon.documentNumber,
-              "additional": 'N',
+              "additional":  vm.viewModelmoldedFormalization.aditional,
               "createdBy": vm.username
             }
 
             printCardService.printCard(jsonPrint).then( 
                 function(response){
                     if (response.success == true) {
-                        modalFactory.success(messages.modals.success.printSuccess);
-                    } else {
+                        var promise; 
+                        var increaseCounter = function () {
+                        console.log('Loading...')
+                        var idPrint = response.data.id;
+                        
+                        if (contador < 5) {
+                            if (!vm.printCardValid){
+                                printCardService.validPrintExit(idPrint).then(function(response) {
+                                    $timeout(function(){
+                                            var requestCode = response.requestCode;
+                                            
+                                            contador ++;
+                                            console.log('respuesta de la impre-------');
+                                            console.log(response);
+                                            if(requestCode === "MSGOK"){  
+                                                vm.printCardValid =  true;
+                                                $rootScope.globalUserJSon.idRf = response.data.flowStepId;
+                                                $rootScope.globalUserJSon.additional = response.data.additional;
+                                                $rootScope.globalUserJSon.nrTa = response.data.creditCardNumber;
+                                                $interval.cancel(promise);
+                                                validServiMega();    
+                                            }
+                                            else {
+
+                                            }
+                                    }, 20000);
+                                    
+                                }, modalError);                                    
+                            }
+                        }   else {
+                            vm.printCardValid =  true;
+                            $interval.cancel(promise);
+                          }                         
+                        }
+                        promise =  $interval(increaseCounter, 20000);     
+                    }else {
                         modalFactory.success(messages.modals.error.printError);
-                    }
+                    }               
                 }
             );
         }
+
 
         /**
          *  @ngdoc method
@@ -614,7 +671,6 @@
             vm.validationClient = false;
             vm.viewModelmoldedFormalization.typeIdentification = 2;
             vm.bornDay = '';
-            //vm.bornDay.value = '';
             vm.datePassport = '';
             vm.limiteMaximoRd = '';
             vm.limiteMaximoUs = '';
@@ -725,6 +781,7 @@
                             
                     vm.namePlastic2 = vm.dataClientExit.firstName + ' ' + vm.dataClientExit.firstLastname;
                     vm.nameUser = vm.dataClientExit.firstName + ' ' + vm.dataClientExit.secondName + ' ' + vm.dataClientExit.firstLastname + ' ' + vm.dataClientExit.secondLastname;
+
                     vm.landLine = parseInt(vm.dataClientExit.cellPhone);
 
                     /** Validaciones para el tipo de moneda en dolares, donde se ocultan los campos Compra cheques de gerencia */
@@ -747,15 +804,8 @@
                             vm.viewModelmoldedFormalization.status = value.id;
                         }
                     });
-
                     vm.bornDay = document.getElementById("fechaNacimiento");
-                    //vm.datePassport = vm.dataClientExit.birthDate;
-                    //vm.datePassport = vm.datePassport.replace("/","-").replace("/","-");
-                    //vm.datePassport.split("").reverse("").join("");
-                    //vm.datePassport = "1989-08-05";
-                    //30/12/1986
-                    /*NUEVO*/
-                    vm.datePassport = jsonData.birthDate;
+                    vm.datePassport = vm.dataClientExit.birthDate;
                     vm.email = vm.dataClientExit.email;
                     vm.myDate = jsonData.birthDate;
                     vm.cellphone = jsonData.cellPhone;

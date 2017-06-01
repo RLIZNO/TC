@@ -68,13 +68,13 @@
         vm.productTyoe = [];
         vm.validDebitNo = '';
         vm.alert = false;
-        vm.username = 'AM029969';
         vm.findJudicialEvaluation = false;
         vm.accountActive = false;
         vm.customerInvalid = false;
         //vm.preaprobado=false;
         vm.limitRD="";
         vm.limitUSD="";
+        vm.username = 'AM029969';
                 /**
          *  @ngdoc property
          *  @name formValidationDocument
@@ -882,10 +882,12 @@
         function validateClient() {
             
             var documentNumber = vm.viewModelvalidationAccount.numberIdentification;
-
-            resetData();
-            validationClientService.getValidationClient(documentNumber, vm.viewModelvalidationAccount.typeIdentification, vm.username).then(function (responseValue) {
-               
+            creditBureauService.getValidCientExisting(vm.viewModelvalidationAccount.typeIdentification ,documentNumber, vm.username).
+                then(function   
+                    (response) {
+                resetData();
+                validationClientService.getValidationClient(documentNumber, vm.viewModelvalidationAccount.typeIdentification, vm.username).then(function (responseValue) {
+                
                 vm.validationClient = responseValue.validationClient;
                 validateClientCanContinue();
 
@@ -899,9 +901,12 @@
                     getCreditListService();
                     vm.clientYes = true;
                 }
-
+              }, modalError);
             }, modalError);
 
+            /*var getJsonCierreForz = localStorage.getItem('JSON');
+            var docNumUserCierreForz = JSON.parse(getJsonCierreForz);
+            var t = docNumUserCierreForz.documentNumber;*/
 
             addTableService.getcierreForzosoTC(documentNumber).then(
                 function (response) {   
@@ -953,7 +958,6 @@
                             
                             /* URL que almacena el llamado al archivo XML en el servidor */
                             vm.urlXml = urlBase + '?documentNumber=' + documentNumber + '&userName='+  vm.username;
-
 
                          validationClientService.getSiebelCustomer(vm.viewModelvalidationAccount.typeIdentification, documentNumber, vm.username).then(function(response){
                                 
@@ -1416,7 +1420,7 @@
 
                 /*Llamamos al servicio que elimina el xml del buró de credito obtenido */
                 var documentNumber = vm.viewModelvalidationAccount.numberIdentification;
-                creditBureauService.deleteXmlCreditBureau(documentNumber, $rootScope.dataUser.userName).then(function () {});
+                creditBureauService.deleteXmlCreditBureau(documentNumber, vm.username).then(function () {});
 
                 /*Llamos al servicio que guarda la identificación del cliente */
                 saveIdentificationService.postSaveIdentification(jsonIdentification);
@@ -1436,8 +1440,8 @@
                         var dataSiebel = false;
                         localStorage.setItem("dataSiebel", dataSiebel);
                         localStorage.setItem("validclientTc", validclientTc);
-                        window.location.href = "/wps/portal/ptd/inicio";
-                        //window.location.href = "../index.html";
+                        //window.location.href = "/wps/portal/ptd/inicio";
+                        window.location.href = "../index.html";
                     }, 0);
                 });
             }
@@ -1480,8 +1484,8 @@
                             localStorage.setItem("dataSiebel", dataSiebel);
                             var validclientTc = 'validclientTc';
                             localStorage.setItem("validclientTc", validclientTc);
-                            window.location.href = "/wps/portal/ptd/inicio";
-                            //window.location.href = "../index.html";
+                            //window.location.href = "/wps/portal/ptd/inicio";
+                            window.location.href = "../index.html";
                         }, modalError); 
 
             }
